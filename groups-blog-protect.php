@@ -58,6 +58,7 @@ class Groups_Blog_Protect {
 		if ( self::groups_is_active() ) {
 			Groups_Options::delete_option( 'groups-blog-protect-to' );
 			Groups_Options::delete_option( 'groups-blog-protect-post-id' );
+			Groups_Options::delete_option( 'groups-blog-protect-groups' );
 		}
 	}
 
@@ -79,6 +80,8 @@ class Groups_Blog_Protect {
 	 */
 	public static function settings() {
 
+		global $wpdb;
+		
 		if ( !current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'Access denied.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) );
 		}
@@ -119,6 +122,15 @@ class Groups_Blog_Protect {
 				Groups_Options::update_option( 'groups-blog-protect-status', $_POST['status'] );
 			}
 			
+			$access_groups_selected = array();
+			if ( !empty( $_POST['access_groups'] ) ) {
+				$access_groups = $_POST['access_groups'];
+				foreach( $access_groups as $access_group ) {
+						$access_groups_selected[] = $access_group;
+				}
+			}
+			Groups_Options::update_option( 'groups-blog-protect-groups', $access_groups_selected );
+			
 			echo
 			'<p class="info">' .
 			__( 'The settings have been saved.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) .
@@ -128,7 +140,10 @@ class Groups_Blog_Protect {
 		$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
 		$post_id         = Groups_Options::get_option( 'groups-blog-protect-post-id', '' );
 		$redirect_status = Groups_Options::get_option( 'groups-blog-protect-status', '301' );
-
+		
+		$registered_group = Groups_Group::read_by_name(Groups_Registered::REGISTERED_GROUP_NAME);
+		$access_groups_selected = Groups_Options::get_option( 'groups-blog-protect-groups', array($registered_group->group_id) );
+		
 		echo '<h1>';
 		echo __( 'Groups Blog Protect', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
 		echo '</h1>';
@@ -202,6 +217,35 @@ class Groups_Blog_Protect {
 			'</label>' .
 			'</p>';
 
+		// blancoleon - 20130320
+		
+		echo '<div style="border-top:1px solid #eee; margin-top:1em; padding-top: 1em;"></div>';
+
+		echo '<h2>' . __( 'Groups', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) . '</h2>';
+		
+		echo '<div class="description">';
+		echo __( 'Groups that can access to blog.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo '</div>';
+		
+		$group_table = _groups_get_tablename( 'group' );
+		
+		$query = $wpdb->prepare("SELECT * FROM $group_table", array());
+	
+		$results = $wpdb->get_results( $query, OBJECT );
+		
+		echo '<ul>';
+		foreach( $results as $group ) {
+			$checked = in_array( $group->group_id, $access_groups_selected ) ? ' checked="checked" ' : '';
+			echo '<li>';
+			echo '<label>';
+			echo '<input name="access_groups[]" type="checkbox" value="' . $group->group_id . '" ' . $checked . '/>';
+			echo $group->name;
+			echo '</label>';
+			echo '</li>';
+		}
+		echo '<ul>';
+		
+		
 		wp_nonce_field( 'admin', 'groups-blog-protect', true, true );
 
 		echo '<br/>';
@@ -214,6 +258,8 @@ class Groups_Blog_Protect {
 		echo '</div>';
 		echo '</form>';
 		echo '</div>';
+		
+		
 	}
 
 	/**
@@ -225,11 +271,23 @@ class Groups_Blog_Protect {
 
 		if ( class_exists( 'Groups_User_Group' ) ) { // faster than self::groups_is_active
 
-			$registered_group = Groups_Group::read_by_name( Groups_Registered::REGISTERED_GROUP_NAME );
+			// blancoleon - 20130320
+			
+			$registered_group = Groups_Group::read_by_name(Groups_Registered::REGISTERED_GROUP_NAME);
+			$access_groups_selected = Groups_Options::get_option( 'groups-blog-protect-groups', array($registered_group->group_id) );
+		
+			$user = new Groups_User( get_current_user_id() );
+			$user_groups = $user->groups;
 
-			// must be a member of the Registered group to access 
-			if ( !Groups_User_Group::read( get_current_user_id(), $registered_group->group_id ) ) {
-
+			$user_groups_ids = array();
+			foreach ($user_groups as $user_group) {
+				$user_groups_ids[] = $user_group->group->group_id;
+			}
+			
+			$intersect = array_intersect($access_groups_selected, $user_groups_ids);
+			
+			// must be a member of any group selected 
+			if (sizeof($intersect) <= 0) {
 				$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
 				$post_id         = Groups_Options::get_option( 'groups-blog-protect-post-id', '' );
 				$redirect_status = intval( Groups_Options::get_option( 'groups-blog-protect-status', '301' ) );
