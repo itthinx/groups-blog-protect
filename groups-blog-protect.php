@@ -280,8 +280,10 @@ class Groups_Blog_Protect {
 			$user_groups = $user->groups;
 
 			$user_groups_ids = array();
-			foreach ($user_groups as $user_group) {
-				$user_groups_ids[] = $user_group->group->group_id;
+			if (sizeof($user_groups)>0) {
+				foreach ($user_groups as $user_group) {
+					$user_groups_ids[] = $user_group->group->group_id;
+				}
 			}
 			
 			$intersect = array_intersect($access_groups_selected, $user_groups_ids);
