@@ -7,7 +7,7 @@ Tested up to: 5.4
 Stable tag: 1.2.0
 License: GPLv3
 
-Protect access to blogs by group membership.
+Protect access to blogs via group memberships powered by [Groups](https://wordpress.org/plugins/groups/).
 
 == Description ==
 
