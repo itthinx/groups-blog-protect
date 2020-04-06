@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2020-04-06 22:36+0200\n"
+        "POT-Creation-Date: 2020-04-06 23:11+0200\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,82 +16,86 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: groups-blog-protect.php:85
+#: groups-blog-protect.php:108
 msgid   "Access denied."
 msgstr  ""
 
-#: groups-blog-protect.php:148
+#: groups-blog-protect.php:171
 msgid   "Do not redirect"
 msgstr  ""
 
-#: groups-blog-protect.php:97
+#: groups-blog-protect.php:120
 msgid   "Found"
 msgstr  ""
 
-#: groups-blog-protect.php:135
+#: groups-blog-protect.php:158
 msgid   "Groups Blog Protect"
 msgstr  ""
 
-#: groups-blog-protect.php:174
+#: groups-blog-protect.php:197
 msgid   "Indicate the ID of a post to redirect to, leave it empty to redirect "
         "to the home page."
 msgstr  ""
 
-#: groups-blog-protect.php:96
+#: groups-blog-protect.php:119
 msgid   "Moved Permanently"
 msgstr  ""
 
-#: groups-blog-protect.php:90
+#: groups-blog-protect.php:113
 msgid   "Please install and activate <a href=\"https://wordpress.org/plugins/"
         "groups/\">Groups</a> to use this plugin."
 msgstr  ""
 
-#: groups-blog-protect.php:161
+#: groups-blog-protect.php:184
 msgid   "Post ID"
 msgstr  ""
 
-#: groups-blog-protect.php:169
+#: groups-blog-protect.php:192
 #, php-format
 msgid   "Post title: %s"
 msgstr  ""
 
-#: groups-blog-protect.php:196
+#: groups-blog-protect.php:219
 msgid   "Redirect Status Code"
 msgstr  ""
 
-#: groups-blog-protect.php:155
+#: groups-blog-protect.php:178
 msgid   "Redirect to a post"
 msgstr  ""
 
-#: groups-blog-protect.php:185
+#: groups-blog-protect.php:208
 msgid   "Redirect to the WordPress login"
 msgstr  ""
 
-#: groups-blog-protect.php:142
+#: groups-blog-protect.php:165
 msgid   "Redirection"
 msgstr  ""
 
-#: groups-blog-protect.php:212
+#: groups-blog-protect.php:235
 msgid   "Save"
 msgstr  ""
 
-#: groups-blog-protect.php:98
+#: groups-blog-protect.php:121
 msgid   "See Other"
 msgstr  ""
 
-#: groups-blog-protect.php:191
+#: groups-blog-protect.php:79
+msgid   "Settings"
+msgstr  ""
+
+#: groups-blog-protect.php:214
 msgid   "Status Code"
 msgstr  ""
 
-#: groups-blog-protect.php:99
+#: groups-blog-protect.php:122
 msgid   "Temporary Redirect"
 msgstr  ""
 
-#: groups-blog-protect.php:126
+#: groups-blog-protect.php:149
 msgid   "The settings have been saved."
 msgstr  ""
 
-#: groups-blog-protect.php:176
+#: groups-blog-protect.php:199
 msgid   "The title of the post will be shown if a valid post ID has been "
         "given."
 msgstr  ""

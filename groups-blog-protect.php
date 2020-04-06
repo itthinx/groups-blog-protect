@@ -45,6 +45,9 @@ class Groups_Blog_Protect {
 		register_deactivation_hook(__FILE__,  array( __CLASS__,'deactivate' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'template_redirect' ) );
+		if ( is_admin() ) {
+			add_filter( 'plugin_action_links_'. plugin_basename( __FILE__ ), array( __CLASS__, 'admin_settings_link' ) );
+		}
 	}
 
 	/**
@@ -61,6 +64,26 @@ class Groups_Blog_Protect {
 			Groups_Options::delete_option( 'groups-blog-protect-to' );
 			Groups_Options::delete_option( 'groups-blog-protect-post-id' );
 		}
+	}
+
+	/**
+	 * Adds plugin links.
+	 *
+	 * @param array $links
+	 * @param array $links with additional links
+	 */
+	public static function admin_settings_link( $links ) {
+		$links[] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'admin.php?page=groups-blog-protect' ) ),
+			esc_html( __( 'Settings', 'groups-blog-protect' ) )
+		);
+		// $links[] = sprintf(
+		//	'<a href="%s">%s</a>',
+		//	esc_url( 'https://docs.itthinx.com/document/groups-blog-protect' ),
+		//	__( 'Documentation', 'groups-blog-protect' )
+		// );
+		return $links;
 	}
 
 	/**
@@ -209,7 +232,7 @@ class Groups_Blog_Protect {
 		echo '<br/>';
 
 		echo '<div class="buttons">';
-		echo sprintf( '<input class="create button" type="submit" name="submit" value="%s" />', __( 'Save', 'groups-blog-protect' ) );
+		echo sprintf( '<input class="create button button-primary" type="submit" name="submit" value="%s" />', __( 'Save', 'groups-blog-protect' ) );
 		echo '<input type="hidden" name="action" value="save" />';
 		echo '</div>';
 
