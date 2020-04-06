@@ -3,8 +3,8 @@ Contributors: itthinx
 Donate link: http://www.itthinx.com/plugins/groups-blog-protect
 Tags: 301, 302, 303, 307, 404, access, access control, blog, blogs, capability, capabilities, content, download, downloads, file, file access, files, group, groups, member, members, membership, memberships, permission, permissions, protect, redirect, redirection, subscription, subscriptions
 Requires at least: 3.3
-Tested up to: 5.2
-Stable tag: 1.1.0
+Tested up to: 5.4
+Stable tag: 1.2.0
 License: GPLv3
 
 Protect access to blogs by group membership.
