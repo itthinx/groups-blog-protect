@@ -7,6 +7,7 @@
 * Added the text domain declaration.
 * Upped the minimum WordPress requirement to 5.0.
 * Added the translation template for the plugin's translatable strings.
+* Code formatting corrections.
 
 = 1.1.0 =
 * WordPress 5.2 compatible.
