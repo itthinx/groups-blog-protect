@@ -1,19 +1,19 @@
 === Groups Blog Protect ===
 Contributors: itthinx
 Donate link: http://www.itthinx.com/plugins/groups-blog-protect
-Tags: 301, 302, 303, 307, 404, access, access control, blog, blogs, capability, capabilities, content, download, downloads, file, file access, files, group, groups, member, members, membership, memberships, permission, permissions, protect, redirect, redirection, subscription, subscriptions
-Requires at least: 3.3
-Tested up to: 5.2
-Stable tag: 1.1.0
+Tags: groups, access, access control, memberships, blogs
+Requires at least: 5.0
+Tested up to: 5.4
+Stable tag: 1.2.0
 License: GPLv3
 
-Protect access to blogs by group membership.
+Protect access to blogs via group memberships powered by [Groups](https://wordpress.org/plugins/groups/).
 
 == Description ==
 
 This plugin allows to redirect visitors to a blog who do not belong to the blog's _Registered_ group.
 
-The plugin is an extension to and __requires__ [Groups](http://wordpress.org/extend/plugins/groups/).
+The plugin is an extension to and __requires__ [Groups](https://wordpress.org/plugins/groups/).
 
 Note that the current version does __not__ allow to specify a particular group - at least in that sense, the status of the plugin can be considered somewhat _experimental_.
 
@@ -46,7 +46,7 @@ Read the section on [Status Code Definitions](http://www.w3.org/Protocols/rfc261
 
 = I have a question, where do I ask? =
 
-You can leave a comment at the [Groups Blog Protect](http://www.itthinx.com/plugins/groups-blog-protect/) plugin page.
+You can leave a comment at the [Groups Blog Protect](https://www.itthinx.com/plugins/groups-blog-protect/) plugin page.
 
 == Screenshots ==
 
@@ -54,10 +54,8 @@ You can leave a comment at the [Groups Blog Protect](http://www.itthinx.com/plug
 
 == Changelog ==
 
-= 1.0.0 =
-* Initial release.
+For the full changelog see [changelog.txt](https://github.com/itthinx/groups-blog-protect/blob/master/changelog.txt).
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-* Initial release.
+This release has been tested with the latest version of WordPress.
