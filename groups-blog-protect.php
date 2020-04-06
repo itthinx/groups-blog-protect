@@ -2,7 +2,7 @@
 /**
  * groups-blog-protect.php
  *
- * Copyright (c) 2013 "kento" Karim Rahimpur www.itthinx.com
+ * Copyright (c) 2013-2020 "kento" Karim Rahimpur www.itthinx.com
  *
  * This code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt.
@@ -23,8 +23,10 @@
  * Description: Protect access to blogs by group membership.
  * Version: 1.2.0
  * Author: itthinx
- * Author URI: http://www.itthinx.com
- * Donate-Link: http://www.itthinx.com
+ * Author URI: https://www.itthinx.com
+ * Donate-Link: https://www.itthinx.com
+ * Text Domain: groups-blog-protect
+ * Domain Path: /languages
  * License: GPLv3
  */
 
@@ -80,21 +82,21 @@ class Groups_Blog_Protect {
 	public static function settings() {
 
 		if ( !current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Access denied.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) );
+			wp_die( __( 'Access denied.', 'groups-blog-protect' ) );
 		}
 
 		if ( !self::groups_is_active() ) {
 			echo '<p>';
-			echo __( 'Please install and activate <a href="http://wordpress.org/extend/plugins/groups/">Groups</a> to use this plugin.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+			echo __( 'Please install and activate <a href="https://wordpress.org/plugins/groups/">Groups</a> to use this plugin.', 'groups-blog-protect' );
 			echo '</p>';
 			return;
 		}
 
 		$http_status_codes = array(
-			'301' => __( 'Moved Permanently', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ),
-			'302' => __( 'Found', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ),
-			'303' => __( 'See Other', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ),
-			'307' => __( 'Temporary Redirect', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN )
+			'301' => __( 'Moved Permanently', 'groups-blog-protect' ),
+			'302' => __( 'Found', 'groups-blog-protect' ),
+			'303' => __( 'See Other', 'groups-blog-protect' ),
+			'307' => __( 'Temporary Redirect', 'groups-blog-protect' )
 		);
 
 		if ( isset( $_POST['action'] ) && ( $_POST['action'] == 'save' ) && wp_verify_nonce( $_POST['groups-blog-protect'], 'admin' ) ) {
@@ -121,7 +123,7 @@ class Groups_Blog_Protect {
 			
 			echo
 			'<p class="info">' .
-			__( 'The settings have been saved.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) .
+			__( 'The settings have been saved.', 'groups-blog-protect' ) .
 			'</p>';
 		}
 
@@ -130,33 +132,33 @@ class Groups_Blog_Protect {
 		$redirect_status = Groups_Options::get_option( 'groups-blog-protect-status', '301' );
 
 		echo '<h1>';
-		echo __( 'Groups Blog Protect', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Groups Blog Protect', 'groups-blog-protect' );
 		echo '</h1>';
 
 		echo '<div class="settings">';
 		echo '<form name="settings" method="post" action="">';
 		echo '<div>';
 
-		echo '<h2>' . __( 'Redirection', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) . '</h2>';
+		echo '<h2>' . __( 'Redirection', 'groups-blog-protect' ) . '</h2>';
 
 		echo '<p>';
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="none" %s />', $redirect_to == 'none' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Do not redirect', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Do not redirect', 'groups-blog-protect' );
 		echo '</label>';
 		echo '</p>';
 
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="post" %s />', $redirect_to == 'post' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Redirect to a post', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Redirect to a post', 'groups-blog-protect' );
 		echo '</label>';
 
 		echo '<div style="margin: 1em 0 0 2em">';
 
 		echo '<label>';
-		echo __( 'Post ID', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Post ID', 'groups-blog-protect' );
 		echo ' ';
 		echo sprintf( '<input type="text" name="post_id" value="%s" />', $post_id );
 		echo '</label>';
@@ -164,14 +166,14 @@ class Groups_Blog_Protect {
 		if ( !empty( $post_id ) ) {
 			$post_title = get_the_title( $post_id );
 			echo '<div>';
-			echo sprintf( __( 'Post title: %s', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ), $post_title );
+			echo sprintf( __( 'Post title: %s', 'groups-blog-protect' ), $post_title );
 			echo '</div>';
 		}
 
 		echo '<div class="description">';
-		echo __( 'Indicate the ID of a post to redirect to, leave it empty to redirect to the home page.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Indicate the ID of a post to redirect to, leave it empty to redirect to the home page.', 'groups-blog-protect' );
 		echo '<br/>';
-		echo __( 'The title of the post will be shown if a valid post ID has been given.', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'The title of the post will be shown if a valid post ID has been given.', 'groups-blog-protect' );
 		echo '</div>';
 		
 		echo '</div>';
@@ -180,18 +182,18 @@ class Groups_Blog_Protect {
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="login" %s />', $redirect_to == 'login' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Redirect to the WordPress login', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN );
+		echo __( 'Redirect to the WordPress login', 'groups-blog-protect' );
 		echo '</label>';
 		echo '</p>';
 
 		echo '<div style="border-top:1px solid #eee; margin-top:1em; padding-top: 1em;"></div>';
 
-		echo '<h2>' . __( 'Status Code', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) . '</h2>';
+		echo '<h2>' . __( 'Status Code', 'groups-blog-protect' ) . '</h2>';
 
 		echo
 			'<p>' .
 			'<label>' .
-			__( 'Redirect Status Code', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) .
+			__( 'Redirect Status Code', 'groups-blog-protect' ) .
 			' ' .
 			'<select name="status">';
 		foreach ( $http_status_codes as $code => $name ) {
@@ -207,7 +209,7 @@ class Groups_Blog_Protect {
 		echo '<br/>';
 
 		echo '<div class="buttons">';
-		echo sprintf( '<input class="create button" type="submit" name="submit" value="%s" />', __( 'Save', GROUPS_BLOG_PROTECT_PLUGIN_DOMAIN ) );
+		echo sprintf( '<input class="create button" type="submit" name="submit" value="%s" />', __( 'Save', 'groups-blog-protect' ) );
 		echo '<input type="hidden" name="action" value="save" />';
 		echo '</div>';
 
@@ -227,7 +229,7 @@ class Groups_Blog_Protect {
 
 			$registered_group = Groups_Group::read_by_name( Groups_Registered::REGISTERED_GROUP_NAME );
 
-			// must be a member of the Registered group to access 
+			// must be a member of the Registered group to access
 			if ( !Groups_User_Group::read( get_current_user_id(), $registered_group->group_id ) ) {
 
 				$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
@@ -277,6 +279,7 @@ class Groups_Blog_Protect {
 
 	/**
 	 * Returns true if the Groups plugin is active.
+	 *
 	 * @return boolean true if Groups is active
 	 */
 	private static function groups_is_active() {

@@ -2,6 +2,11 @@
 
 = 1.2.0 =
 * WordPress 5.4 compatible.
+* Updated outdated links.
+* Replaced uses of the plugin's language domain constant.
+* Added the text domain declaration.
+* Upped the minimum WordPress requirement to 5.0.
+* Added the translation template for the plugin's translatable strings.
 
 = 1.1.0 =
 * WordPress 5.2 compatible.
