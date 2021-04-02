@@ -21,7 +21,7 @@
  * Plugin Name: Groups Blog Protect
  * Plugin URI: http://www.itthinx.com/plugins/groups
  * Description: Protect access to blogs via group memberships powered by <a href="https://wordpress.org/plugins/groups/">Groups</a>.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: itthinx
  * Author URI: https://www.itthinx.com
  * Donate-Link: https://www.itthinx.com
