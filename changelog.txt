@@ -1,5 +1,8 @@
 == Groups Blog Protect by itthinx - changelog.txt ==
 
+= 1.3.0 =
+* WordPress 5.7 compatible.
+
 = 1.2.0 =
 * WordPress 5.4 compatible.
 * Updated outdated links.
