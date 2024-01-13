@@ -2,7 +2,7 @@
 /**
  * groups-blog-protect.php
  *
- * Copyright (c) 2013-2020 "kento" Karim Rahimpur www.itthinx.com
+ * Copyright (c) 2013-2024 "kento" Karim Rahimpur www.itthinx.com
  *
  * This code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt.
@@ -22,6 +22,8 @@
  * Plugin URI: http://www.itthinx.com/plugins/groups
  * Description: Protect access to blogs via group memberships powered by <a href="https://wordpress.org/plugins/groups/">Groups</a>.
  * Version: 1.4.0
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
  * Author: itthinx
  * Author URI: https://www.itthinx.com
  * Donate-Link: https://www.itthinx.com
@@ -71,18 +73,20 @@ class Groups_Blog_Protect {
 	 *
 	 * @param array $links
 	 * @param array $links with additional links
+	 *
+	 * @return array links
 	 */
 	public static function admin_settings_link( $links ) {
 		$links[] = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( admin_url( 'admin.php?page=groups-blog-protect' ) ),
-			esc_html( __( 'Settings', 'groups-blog-protect' ) )
+			esc_html__( 'Settings', 'groups-blog-protect' )
 		);
-		// $links[] = sprintf(
-		//	'<a href="%s">%s</a>',
-		//	esc_url( 'https://docs.itthinx.com/document/groups-blog-protect' ),
-		//	__( 'Documentation', 'groups-blog-protect' )
-		// );
+		$links[] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( 'https://docs.itthinx.com/document/groups-blog-protect' ),
+			esc_html__( 'Documentation', 'groups-blog-protect' )
+		);
 		return $links;
 	}
 
@@ -105,12 +109,15 @@ class Groups_Blog_Protect {
 	public static function settings() {
 
 		if ( !current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Access denied.', 'groups-blog-protect' ) );
+			wp_die( esc_html__( 'Access denied.', 'groups-blog-protect' ) );
 		}
 
 		if ( !self::groups_is_active() ) {
 			echo '<p>';
-			echo __( 'Please install and activate <a href="https://wordpress.org/plugins/groups/">Groups</a> to use this plugin.', 'groups-blog-protect' );
+			echo sprintf(
+				esc_html__( 'Please install and activate %s to use this plugin.', 'groups-blog-protect' ),
+				'<a href="https://wordpress.org/plugins/groups/">Groups</a>'
+			);
 			echo '</p>';
 			return;
 		}
@@ -139,15 +146,14 @@ class Groups_Blog_Protect {
 			} else {
 				Groups_Options::delete_option( 'groups-blog-protect-post-id' );
 			}
-			
+
 			if ( key_exists( $_POST['status'], $http_status_codes ) ) {
 				Groups_Options::update_option( 'groups-blog-protect-status', $_POST['status'] );
 			}
-			
-			echo
-			'<p class="info">' .
-			__( 'The settings have been saved.', 'groups-blog-protect' ) .
-			'</p>';
+
+			echo '<p class="info">';
+			echo esc_html__( 'The settings have been saved.', 'groups-blog-protect' );
+			echo '</p>';
 		}
 
 		$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
@@ -155,33 +161,33 @@ class Groups_Blog_Protect {
 		$redirect_status = Groups_Options::get_option( 'groups-blog-protect-status', '301' );
 
 		echo '<h1>';
-		echo __( 'Groups Blog Protect', 'groups-blog-protect' );
+		echo esc_html__( 'Groups Blog Protect', 'groups-blog-protect' );
 		echo '</h1>';
 
 		echo '<div class="settings">';
 		echo '<form name="settings" method="post" action="">';
 		echo '<div>';
 
-		echo '<h2>' . __( 'Redirection', 'groups-blog-protect' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Redirection', 'groups-blog-protect' ) . '</h2>';
 
 		echo '<p>';
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="none" %s />', $redirect_to == 'none' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Do not redirect', 'groups-blog-protect' );
+		echo esc_html__( 'Do not redirect', 'groups-blog-protect' );
 		echo '</label>';
 		echo '</p>';
 
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="post" %s />', $redirect_to == 'post' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Redirect to a post', 'groups-blog-protect' );
+		echo esc_html__( 'Redirect to a post', 'groups-blog-protect' );
 		echo '</label>';
 
 		echo '<div style="margin: 1em 0 0 2em">';
 
 		echo '<label>';
-		echo __( 'Post ID', 'groups-blog-protect' );
+		echo esc_html__( 'Post ID', 'groups-blog-protect' );
 		echo ' ';
 		echo sprintf( '<input type="text" name="post_id" value="%s" />', $post_id );
 		echo '</label>';
@@ -189,50 +195,56 @@ class Groups_Blog_Protect {
 		if ( !empty( $post_id ) ) {
 			$post_title = get_the_title( $post_id );
 			echo '<div>';
-			echo sprintf( __( 'Post title: %s', 'groups-blog-protect' ), $post_title );
+			echo sprintf( esc_html__( 'Post title: %s', 'groups-blog-protect' ), esc_html( $post_title ) );
 			echo '</div>';
 		}
 
 		echo '<div class="description">';
-		echo __( 'Indicate the ID of a post to redirect to, leave it empty to redirect to the home page.', 'groups-blog-protect' );
+		echo esc_html__( 'Indicate the ID of a post to redirect to, leave it empty to redirect to the home page.', 'groups-blog-protect' );
 		echo '<br/>';
-		echo __( 'The title of the post will be shown if a valid post ID has been given.', 'groups-blog-protect' );
+		echo esc_html__( 'The title of the post will be shown if a valid post ID has been given.', 'groups-blog-protect' );
 		echo '</div>';
-		
+
 		echo '</div>';
 
 		echo '<p>';
 		echo '<label>';
 		echo sprintf( '<input type="radio" name="redirect_to" value="login" %s />', $redirect_to == 'login' ? ' checked="checked" ' : '' );
 		echo ' ';
-		echo __( 'Redirect to the WordPress login', 'groups-blog-protect' );
+		echo esc_html__( 'Redirect to the WordPress login', 'groups-blog-protect' );
 		echo '</label>';
 		echo '</p>';
 
 		echo '<div style="border-top:1px solid #eee; margin-top:1em; padding-top: 1em;"></div>';
 
-		echo '<h2>' . __( 'Status Code', 'groups-blog-protect' ) . '</h2>';
+		echo '<h2>';
+		echo esc_html__( 'Status Code', 'groups-blog-protect' );
+		echo '</h2>';
 
-		echo
-			'<p>' .
-			'<label>' .
-			__( 'Redirect Status Code', 'groups-blog-protect' ) .
-			' ' .
-			'<select name="status">';
+		echo '<p>';
+		echo '<label>';
+		echo esc_html__( 'Redirect Status Code', 'groups-blog-protect' );
+		echo ' ';
+		echo '<select name="status">';
 		foreach ( $http_status_codes as $code => $name ) {
-			echo '<option value="' . esc_attr( $code ) . '" ' . ( $redirect_status == $code ? ' selected="selected" ' : '' ) . '>' . $name . ' (' . $code . ')' . '</option>';
+			echo sprintf(
+				'<option value="%s" %s >%s (%s)</option>',
+				esc_attr( $code ),
+				$redirect_status === $code ? ' selected="selected" ' : '',
+				esc_html( $name ),
+				esc_html( $code )
+			);
 		}
-		echo
-			'</select>' .
-			'</label>' .
-			'</p>';
+		echo '</select>';
+		echo '</label>';
+		echo '</p>';
 
 		wp_nonce_field( 'admin', 'groups-blog-protect', true, true );
 
 		echo '<br/>';
 
 		echo '<div class="buttons">';
-		echo sprintf( '<input class="create button button-primary" type="submit" name="submit" value="%s" />', __( 'Save', 'groups-blog-protect' ) );
+		echo sprintf( '<input class="create button button-primary" type="submit" name="submit" value="%s" />', esc_html__( 'Save', 'groups-blog-protect' ) );
 		echo '<input type="hidden" name="action" value="save" />';
 		echo '</div>';
 
@@ -248,12 +260,42 @@ class Groups_Blog_Protect {
 
 		global $wp_query;
 
-		if ( class_exists( 'Groups_User_Group' ) ) { // faster than self::groups_is_active
+		if ( class_exists( 'Groups_User' ) ) { // faster than self::groups_is_active
 
-			$registered_group = Groups_Group::read_by_name( Groups_Registered::REGISTERED_GROUP_NAME );
+			$protecting_group_name = Groups_Registered::REGISTERED_GROUP_NAME;
+			if ( defined( 'GROUPS_BLOG_PROTECT_GROUP' ) ) {
+				if ( is_string( GROUPS_BLOG_PROTECT_GROUP ) ) {
+					$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP;
+				}
+			}
+			if ( is_multisite() ) {
+				$blog_id = get_current_blog_id();
+				if ( defined( 'GROUPS_BLOG_PROTECT_GROUP_' . $blog_id ) ) {
+					if ( is_string( GROUPS_BLOG_PROTECT_GROUP . $blog_id ) ) {
+						$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP . $blog_id;
+					}
+				} else if ( defined( 'GROUPS_BLOG_PROTECT_GROUP' ) ) {
+					if ( is_string( GROUPS_BLOG_PROTECT_GROUP ) ) {
+						$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP;
+					}
+				}
+			}
+			$protecting_group_name = trim( $protecting_group_name );
+			$protecting_group = Groups_Group::read_by_name( $protecting_group_name );
+			if ( !$protecting_group ) {
+				error_log( sprintf( 'Groups Blog Protect is set to protect using the group %s but the group does not exist.', esc_html( $protecting_group_name ) ) );
+				if ( $protecting_group !== Groups_Registered::REGISTERED_GROUP_NAME ) {
+					$protecting_group = Groups_Group::read_by_name( Groups_Registered::REGISTERED_GROUP_NAME );
+					if ( !$protecting_group ) {
+						error_log( sprintf( 'Groups Blog Protect tried to protect using the group %s as a fallback but it does not exist.', esc_html( Groups_Registered::REGISTERED_GROUP_NAME ) ) );
+					}
+				}
+			}
 
+			$user_id = get_current_user_id();
+			$groups_user = new Groups_User( $user_id );
 			// must be a member of the Registered group to access
-			if ( !Groups_User_Group::read( get_current_user_id(), $registered_group->group_id ) ) {
+			if ( !$groups_user->is_member( $protecting_group->group_id ) ) {
 
 				$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
 				$post_id         = Groups_Options::get_option( 'groups-blog-protect-post-id', '' );
@@ -312,7 +354,7 @@ class Groups_Blog_Protect {
 			$active_sitewide_plugins = array_keys( $active_sitewide_plugins );
 			$active_plugins = array_merge( $active_plugins, $active_sitewide_plugins );
 		}
-		return in_array( 'groups/groups.php', $active_plugins ); 
+		return in_array( 'groups/groups.php', $active_plugins );
 	}
 }
 Groups_Blog_Protect::init();

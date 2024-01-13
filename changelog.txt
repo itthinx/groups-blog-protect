@@ -2,6 +2,17 @@
 
 = 1.4.0 =
 * WordPress 6.4 compatible.
+* Added compatibility plugin header fields.
+* Requires at least WordPress 6.0.
+* Requires at least PHP 7.4.
+* Updated for the latest API changes in Groups for membership checks.
+* Updated instances of missing output escaping on the admin side.
+* Adds the documentation link to the plugin entry.
+* Fixes minor code format issues.
+* Updated and added missing code documentation.
+* Updated the translation template.
+* Adds support for the GROUPS_BLOG_PROTECT_GROUP constant to determine which group is used to protect the blog.
+* Adds support for the GROUPS_BLOG_PROTECT_GROUP_n constant, where n is the blog ID, to determine which group is used to protect a particular blog in a multisite setup.
 
 = 1.3.0 =
 * WordPress 5.7 compatible.
