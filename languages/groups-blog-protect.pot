@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2020-04-06 23:11+0200\n"
+        "POT-Creation-Date: 2024-01-14 17:29+0100\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,86 +16,103 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: groups-blog-protect.php:108
+#: groups-blog-protect.php:124
 msgid   "Access denied."
 msgstr  ""
 
-#: groups-blog-protect.php:171
+#: groups-blog-protect.php:294
+msgid   "Admin Dashboard"
+msgstr  ""
+
+#: groups-blog-protect.php:109 groups-blog-protect.php:110
+msgid   "Blog Protect"
+msgstr  ""
+
+#: groups-blog-protect.php:206
 msgid   "Do not redirect"
 msgstr  ""
 
-#: groups-blog-protect.php:120
+#: groups-blog-protect.php:89
+msgid   "Documentation"
+msgstr  ""
+
+#: groups-blog-protect.php:139
 msgid   "Found"
 msgstr  ""
 
-#: groups-blog-protect.php:158
+#: groups-blog-protect.php:193
 msgid   "Groups Blog Protect"
 msgstr  ""
 
-#: groups-blog-protect.php:197
+#: groups-blog-protect.php:254
 msgid   "Indicate the ID of a post to redirect to, leave it empty to redirect "
         "to the home page."
 msgstr  ""
 
-#: groups-blog-protect.php:119
+#: groups-blog-protect.php:301
+msgid   "Lock the WordPress Admin Dashboard (does not apply to site "
+        "administrators)"
+msgstr  ""
+
+#: groups-blog-protect.php:138
 msgid   "Moved Permanently"
 msgstr  ""
 
-#: groups-blog-protect.php:113
-msgid   "Please install and activate <a href=\"https://wordpress.org/plugins/"
-        "groups/\">Groups</a> to use this plugin."
+#: groups-blog-protect.php:130
+#, php-format
+msgid   "Please install and activate %s to use this plugin."
 msgstr  ""
 
-#: groups-blog-protect.php:184
+#: groups-blog-protect.php:220
 msgid   "Post ID"
 msgstr  ""
 
-#: groups-blog-protect.php:192
+#: groups-blog-protect.php:242
 #, php-format
-msgid   "Post title: %s"
+msgid   "Post: %s %s"
 msgstr  ""
 
-#: groups-blog-protect.php:219
+#: groups-blog-protect.php:277
 msgid   "Redirect Status Code"
 msgstr  ""
 
-#: groups-blog-protect.php:178
+#: groups-blog-protect.php:213
 msgid   "Redirect to a post"
 msgstr  ""
 
-#: groups-blog-protect.php:208
+#: groups-blog-protect.php:265
 msgid   "Redirect to the WordPress login"
 msgstr  ""
 
-#: groups-blog-protect.php:165
+#: groups-blog-protect.php:200
 msgid   "Redirection"
 msgstr  ""
 
-#: groups-blog-protect.php:235
+#: groups-blog-protect.php:310
 msgid   "Save"
 msgstr  ""
 
-#: groups-blog-protect.php:121
+#: groups-blog-protect.php:140
 msgid   "See Other"
 msgstr  ""
 
-#: groups-blog-protect.php:79
+#: groups-blog-protect.php:84
 msgid   "Settings"
 msgstr  ""
 
-#: groups-blog-protect.php:214
+#: groups-blog-protect.php:272
 msgid   "Status Code"
 msgstr  ""
 
-#: groups-blog-protect.php:122
+#: groups-blog-protect.php:141
 msgid   "Temporary Redirect"
 msgstr  ""
 
-#: groups-blog-protect.php:149
+#: groups-blog-protect.php:183
 msgid   "The settings have been saved."
 msgstr  ""
 
-#: groups-blog-protect.php:199
+#: groups-blog-protect.php:256
 msgid   "The title of the post will be shown if a valid post ID has been "
         "given."
 msgstr  ""
