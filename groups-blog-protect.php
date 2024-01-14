@@ -47,6 +47,7 @@ class Groups_Blog_Protect {
 		register_deactivation_hook(__FILE__,  array( __CLASS__,'deactivate' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ), 1000 );
 		add_action( 'template_redirect', array( __CLASS__, 'template_redirect' ) );
+		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 		if ( is_admin() ) {
 			add_filter( 'plugin_action_links_'. plugin_basename( __FILE__ ), array( __CLASS__, 'admin_settings_link' ) );
 		}
@@ -172,6 +173,12 @@ class Groups_Blog_Protect {
 				Groups_Options::update_option( 'groups-blog-protect-status', $_POST['status'] );
 			}
 
+			if ( !empty( $_POST['lock_admin'] ) ) {
+				Groups_Options::update_option( 'groups-blog-protect-lock-admin', 'yes' );
+			} else {
+				Groups_Options::delete_option( 'groups-blog-protect-lock-admin' );
+			}
+
 			echo '<p class="info">';
 			echo esc_html__( 'The settings have been saved.', 'groups-blog-protect' );
 			echo '</p>';
@@ -180,6 +187,7 @@ class Groups_Blog_Protect {
 		$redirect_to     = Groups_Options::get_option( 'groups-blog-protect-to', 'login' );
 		$post_id         = Groups_Options::get_option( 'groups-blog-protect-post-id', '' );
 		$redirect_status = Groups_Options::get_option( 'groups-blog-protect-status', '301' );
+		$lock_admin      = Groups_Options::get_option( 'groups-blog-protect-lock-admin', 'no' );
 
 		echo '<h1>';
 		echo esc_html__( 'Groups Blog Protect', 'groups-blog-protect' );
@@ -279,6 +287,18 @@ class Groups_Blog_Protect {
 			);
 		}
 		echo '</select>';
+		echo '</label>';
+		echo '</p>';
+
+		echo '<h2>';
+		echo esc_html__( 'Admin Dashboard', 'groups-blog-protect' );
+		echo '</h2>';
+
+		echo '<p>';
+		echo '<label>';
+		echo sprintf( '<input type="checkbox" name="lock_admin" value="yes" %s />', $lock_admin === 'yes' ? ' checked="checked" ' : '' );
+		echo ' ';
+		echo esc_html__( 'Lock the WordPress Admin Dashboard (does not apply to site administrators)', 'groups-blog-protect' );
 		echo '</label>';
 		echo '</p>';
 
@@ -411,6 +431,57 @@ class Groups_Blog_Protect {
 			}
 		}
 
+	}
+
+	/**
+	 * Lock admin (except for site administrators).
+	 */
+	public static function admin_init() {
+		if ( !is_super_admin() ) {
+			if ( class_exists( 'Groups_User' ) ) { // faster than self::groups_is_active
+				$lock_admin = Groups_Options::get_option( 'groups-blog-protect-lock-admin', 'no' );
+				if ( $lock_admin === 'yes' ) {
+					$protecting_group_name = Groups_Registered::REGISTERED_GROUP_NAME;
+					if ( defined( 'GROUPS_BLOG_PROTECT_GROUP' ) ) {
+						if ( is_string( GROUPS_BLOG_PROTECT_GROUP ) ) {
+							$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP;
+						}
+					}
+					if ( is_multisite() ) {
+						$blog_id = get_current_blog_id();
+						if ( defined( 'GROUPS_BLOG_PROTECT_GROUP_' . $blog_id ) ) {
+							if ( is_string( GROUPS_BLOG_PROTECT_GROUP . $blog_id ) ) {
+								$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP . $blog_id;
+							}
+						} else if ( defined( 'GROUPS_BLOG_PROTECT_GROUP' ) ) {
+							if ( is_string( GROUPS_BLOG_PROTECT_GROUP ) ) {
+								$protecting_group_name = GROUPS_BLOG_PROTECT_GROUP;
+							}
+						}
+					}
+					$protecting_group_name = trim( $protecting_group_name );
+					$protecting_group = Groups_Group::read_by_name( $protecting_group_name );
+					if ( !$protecting_group ) {
+						error_log( sprintf( 'Groups Blog Protect is set to protect using the group %s but the group does not exist.', esc_html( $protecting_group_name ) ) );
+						if ( $protecting_group !== Groups_Registered::REGISTERED_GROUP_NAME ) {
+							$protecting_group = Groups_Group::read_by_name( Groups_Registered::REGISTERED_GROUP_NAME );
+							if ( !$protecting_group ) {
+								error_log( sprintf( 'Groups Blog Protect tried to protect using the group %s as a fallback but it does not exist.', esc_html( Groups_Registered::REGISTERED_GROUP_NAME ) ) );
+							}
+						}
+					}
+					$user_id = get_current_user_id();
+					$groups_user = new Groups_User( $user_id );
+					// must be a member of the Registered group to access
+					if ( !$groups_user->is_member( $protecting_group->group_id ) ) {
+						$current_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						$login_url = wp_login_url( $current_url, true );
+						wp_redirect( $login_url );
+						exit;
+					}
+				}
+			}
+		}
 	}
 
 	/**
