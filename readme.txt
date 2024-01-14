@@ -1,7 +1,7 @@
 === Groups Blog Protect ===
 Contributors: itthinx
-Donate link: http://www.itthinx.com/plugins/groups-blog-protect
-Tags: groups, access, access control, memberships, blogs
+Donate link: https://www.itthinx.com/shop/
+Tags: groups, access, access control, construction, lockdown
 Requires at least: 6.0
 Tested up to: 6.4
 Requires PHP: 7.4
@@ -13,6 +13,8 @@ Protect access to blogs via group memberships powered by [Groups](https://wordpr
 == Description ==
 
 The plugin protects a site so that only members can access its pages.
+
+Suitable for site lockdowns, private sites and sites that are under construction.
 
 It allows to redirect visitors to a particular page or to the WordPress login.
 

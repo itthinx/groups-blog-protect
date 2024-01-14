@@ -45,7 +45,7 @@ class Groups_Blog_Protect {
 	public static function init() {
 		// register_activation_hook(__FILE__, array( __CLASS__,'activate' ) );
 		register_deactivation_hook(__FILE__,  array( __CLASS__,'deactivate' ) );
-		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
+		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ), 1000 );
 		add_action( 'template_redirect', array( __CLASS__, 'template_redirect' ) );
 		if ( is_admin() ) {
 			add_filter( 'plugin_action_links_'. plugin_basename( __FILE__ ), array( __CLASS__, 'admin_settings_link' ) );
@@ -94,13 +94,24 @@ class Groups_Blog_Protect {
 	 * Add the Settings > Groups Blog Protect section.
 	 */
 	public static function admin_menu() {
-		add_options_page(
-			'Groups Blog Protect',
-			'Groups Blog Protect',
-			'manage_options',
-			'groups-blog-protect',
-			array( __CLASS__, 'settings' )
-		);
+		if ( !self::groups_is_active() ) {
+			add_options_page(
+				'Groups Blog Protect',
+				'Groups Blog Protect',
+				'manage_options',
+				'groups-blog-protect',
+				array( __CLASS__, 'settings' )
+			);
+		} else {
+			add_submenu_page(
+				'groups-admin',
+				__( 'Blog Protect', 'groups-blog-protect' ),
+				__( 'Blog Protect', 'groups-blog-protect' ),
+				GROUPS_ADMINISTER_OPTIONS,
+				'groups-blog-protect',
+				array( __CLASS__, 'settings' )
+			);
+		}
 	}
 
 	/**
@@ -142,7 +153,17 @@ class Groups_Blog_Protect {
 			}
 
 			if ( !empty( $_POST['post_id'] ) ) {
-				Groups_Options::update_option( 'groups-blog-protect-post-id', intval( $_POST['post_id'] ) );
+				$post_id = trim( sanitize_text_field( $_POST['post_id'] ) );
+				if ( strlen( $post_id ) > 0 ) {
+					$post_id = max( 0, intval( $post_id ) );
+					if ( $post_id > 0 ) {
+						Groups_Options::update_option( 'groups-blog-protect-post-id', $post_id );
+					} else {
+						Groups_Options::delete_option( 'groups-blog-protect-post-id' );
+					}
+				} else {
+					Groups_Options::delete_option( 'groups-blog-protect-post-id' );
+				}
 			} else {
 				Groups_Options::delete_option( 'groups-blog-protect-post-id' );
 			}
@@ -186,17 +207,39 @@ class Groups_Blog_Protect {
 
 		echo '<div style="margin: 1em 0 0 2em">';
 
+		echo '<p>';
 		echo '<label>';
 		echo esc_html__( 'Post ID', 'groups-blog-protect' );
 		echo ' ';
 		echo sprintf( '<input type="text" name="post_id" value="%s" />', $post_id );
 		echo '</label>';
+		echo '</p>';
 
 		if ( !empty( $post_id ) ) {
+			$post_type_name = '';
+			$post_type = get_post_type( $post_id );
+			if ( is_string( $post_type ) ) {
+				$post_type_name = $post_type;
+				$post_type_object = get_post_type_object( $post_type );
+				if ( $post_type_object instanceof WP_Post_Type ) {
+					$labels = isset( $post_type_object->labels ) ? $post_type_object->labels : null;
+					if ( ( $labels !== null ) && isset( $labels->singular_name ) ) {
+						$post_type_name = __( $labels->singular_name );
+					}
+				}
+			}
 			$post_title = get_the_title( $post_id );
-			echo '<div>';
-			echo sprintf( esc_html__( 'Post title: %s', 'groups-blog-protect' ), esc_html( $post_title ) );
-			echo '</div>';
+			echo '<p>';
+			echo sprintf(
+				esc_html__( 'Post: %s %s', 'groups-blog-protect' ),
+				sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( get_permalink( $post_id ) ),
+					esc_html( $post_title )
+				),
+				!empty( $post_type_name ) ? '[' . esc_html( $post_type_name ) . ']' : ''
+			);
+			echo '</p>';
 		}
 
 		echo '<div class="description">';
@@ -255,6 +298,15 @@ class Groups_Blog_Protect {
 
 	/**
 	 * Handles template redirection.
+	 *
+	 * Here we take care of redirecting to a specific page or the WordPress login when a plain visitor or an unauthorized user tries to access the site.
+	 *
+	 * We also handle the special case where the page to redirect to is protected and the current user or visitor is not allowed to access it:
+	 *
+	 * 1. If the request is for a plain visitor (someone who is not logged in), we redirect to the WordPress login as a fallback.
+	 * 2. If the request is for a user (who is logged in), we redirect to home, or if at home let it pass.
+	 *
+	 * The above is necessary to avoid redirect loops.
 	 */
 	public static function template_redirect() {
 
@@ -310,9 +362,28 @@ class Groups_Blog_Protect {
 
 				if ( $current_post_id !== $post_id ) {
 
+					// special case
+					if ( $redirect_to === 'post' && !empty( $post_id ) && !Groups_Post_Access::user_can_read_post( $post_id, $user_id ) ) {
+						if ( is_user_logged_in() ) {
+							if ( is_home() ) {
+								error_log( sprintf( 'Groups Blog Protect is set to redirect to %s [Post ID %d] but access to it is restricted for the current user. At home, not redirecting.', esc_url( get_permalink( $post_id ) ), esc_html( !empty( $post_id ) ? $post_id : '' ) ) );
+								$redirect_to = 'none';
+							} else {
+								error_log( sprintf( 'Groups Blog Protect is set to redirect to %s [Post ID %d] but access to it is restricted for the current user. Redirecting to home.', esc_url( get_permalink( $post_id ) ), esc_html( !empty( $post_id ) ? $post_id : '' ) ) );
+								$post_id = null;
+							}
+						} else {
+							error_log( sprintf( 'Groups Blog Protect is set to redirect to %s [Post ID %d] but access to it is restricted for the current visitor. Redirecting to login.', esc_url( get_permalink( $post_id ) ), esc_html( !empty( $post_id ) ? $post_id : '' ) ) );
+							$redirect_to = 'login';
+						}
+					}
+
 					switch( $redirect_to ) {
 
 						case 'login' :
+							// Note that if a user logs in but is not authorized, the user will end up on the login screen again right after logging in.
+							// This is by design. This will happen if a group other than the default Registered group is used and a user who does not
+							// belong to that designated group logs in.
 							if ( $current_url !== wp_login_url( $current_url ) ) {
 								wp_redirect( wp_login_url( $current_url ), $redirect_status );
 								exit;
