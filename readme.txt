@@ -2,10 +2,10 @@
 Contributors: itthinx
 Donate link: https://www.itthinx.com/shop/
 Tags: groups, access, access control, construction, lockdown
-Requires at least: 6.0
-Tested up to: 6.4
+Requires at least: 6.5
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv3
 
 Protect access to blogs via group memberships powered by [Groups](https://wordpress.org/plugins/groups/).

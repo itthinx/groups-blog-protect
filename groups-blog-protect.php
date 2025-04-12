@@ -2,7 +2,7 @@
 /**
  * groups-blog-protect.php
  *
- * Copyright (c) 2013-2024 "kento" Karim Rahimpur www.itthinx.com
+ * Copyright (c) 2013-2025 "kento" Karim Rahimpur www.itthinx.com
  *
  * This code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt.
@@ -21,9 +21,10 @@
  * Plugin Name: Groups Blog Protect
  * Plugin URI: http://www.itthinx.com/plugins/groups
  * Description: Protect access to blogs via group memberships powered by <a href="https://wordpress.org/plugins/groups/">Groups</a>.
- * Version: 1.4.0
- * Requires at least: 6.0
+ * Version: 1.5.0
+ * Requires at least: 6.5
  * Requires PHP: 7.4
+ * Requires Plugins: groups
  * Author: itthinx
  * Author URI: https://www.itthinx.com
  * Donate-Link: https://www.itthinx.com
